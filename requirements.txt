@@ -1,0 +1,11 @@
+ipython==8.16.1
+matplotlib==3.7.2
+numpy==1.26.0
+opencv_python==4.6.0
+pandas==2.1.1
+pytube==15.0.0
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
+ultralytics==8.0.200
+got10k==0.1.3

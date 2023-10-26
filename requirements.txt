@@ -9,3 +9,4 @@ torchvision==0.15.2
 torchaudio==2.0.2
 ultralytics==8.0.200
 got10k==0.1.3
+yacs @ file:///home/conda/feedstock_root/build_artifacts/yacs_1645705974477/work

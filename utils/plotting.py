@@ -143,10 +143,14 @@ def plot_track_history(ax, track_history, color):
         y.append(track[1])
     ax.plot(x, y, color=color, marker="o", markersize=4, linewidth=2)
 
-def add_obj_bbox_to_plot(ax, box, color, display_id = None):
+def add_obj_bbox_to_plot(ax, box, color, display_id = None, centered = True):
     x, y, w, h = box
+    if centered:
+        top = (x - w // 2, y - h // 2)
+    else:
+        top = (x, y)
     ax.add_patch(patches.Rectangle(
-            (x - w // 2, y - h // 2),
+            top,
             w,
             h,
             fill=False,
@@ -165,23 +169,25 @@ def plot_tracks_result(frame, result, track_history: defaultdict, colours: list 
     if (ax is None):
         fig, ax = plt.subplots(1, 1, figsize=(7, 7))
     
-    boxes = result.boxes.xywh.cpu()
-    track_ids = result.boxes.id.int().cpu().tolist()
     img_show = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     ax.axis('off')
     ax.imshow(img_show)
     
+    boxes = result.boxes
+    if (boxes.is_track):
+        xywh = boxes.xywh.cpu()
+        track_ids = result.boxes.id.int().cpu().tolist()
 
-    for box, track_id in zip(boxes, track_ids):
-        x, y, w, h = box
-        track = track_history[track_id]
-        track.append((float(x), float(y)))  
-        if len(track) > 15:  
-            track.pop(0)
-            
-        color = colours[track_id % len(colours)]
-        add_obj_bbox_to_plot(ax, box, color, track_id)
-        plot_track_history(ax, track, color)
+        for box, track_id in zip(xywh, track_ids):
+            x, y, w, h = box
+            track = track_history[track_id]
+            track.append((float(x), float(y)))  
+            if len(track) > 15:  
+                track.pop(0)
+                
+            color = colours[track_id % len(colours)]
+            add_obj_bbox_to_plot(ax, box, color, track_id)
+            plot_track_history(ax, track, color)
 
 def plot_detection_result(result, ax = None):
     annotated_frame = result.plot()

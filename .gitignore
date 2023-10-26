@@ -1,2 +1,7 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+yolov8*.pt
 output/
 datasets/video/traffic.mp4
